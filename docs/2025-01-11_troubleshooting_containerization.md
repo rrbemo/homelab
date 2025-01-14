@@ -25,8 +25,35 @@ crashed! However, when I started poking around into the web interface, I found a
 The second issue was that I didn't have the "config" file, which has credentials for a part of the app. In this case, I
 was able to use the log tab again to find that there was a "file not found" error. The file was my config file. 
 
-The next step is to try and learn what the standardized way is to pass credentials into a container without making them
-visible to anyone who sees or uses the built container.
+I converted the config file to a .env file and used environment variables for the time being. The password for the 
+postgresql database is able to be seen when inspecting the container, but that isn't a big issue at this time. 
+Eventually I would like to have it use secrets so that it is not as open.
+
+### Issue 3
+
+The third issue was that the UDP traffic was not reaching the container/application. Nothing was being read when playing 
+F1 23 and no postgresql database activity was happening. I susspected that maybe proxmox was stopping traffic. I tried 
+a netcat command to see if traffic was comming through. 
+
+    netcat -ul 22023
+
+This showed that something was getting through, although not exactly definitive. So, I decided that UDP traffic was not 
+getting to the container. 
+
+To fix this, I added a port mapping designation of host 22023 to container 22023/udp. This seemed to fix the issue. The 
+configuration was when starting the image, about half way down the page. In the command line I believe it would look
+something like:
+
+    ... -p 22023:22023/udp
+
+I now have the application running basically as good as it was running on my laptop. It was pumping up to 500 
+transactions per second to the postgresql database. I believe this is a lot higher rate. Likely due to the fact that all 
+traffic is hard wired.
+
+## Next Steps
+
+I'm considering this troubleshooting process complete. The application is running the same, if not better than it was 
+before. From this point on, I need to focus on efficiencies of reading and writing the data.
 
 ## Things I need to learn
 
