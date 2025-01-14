@@ -1,4 +1,5 @@
 # Create Kubernetes Arma 3 server
+## 2025-01-11
 
 I've already set up a remote Arma 3 server in Ubuntu. Why not try and get it working on 
 this k3s cluster?
